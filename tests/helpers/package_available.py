@@ -1,7 +1,6 @@
 import platform
 
 from importlib.util import find_spec
-from lightning.fabric.accelerators import TPUAccelerator
 
 
 def _package_available(package_name: str) -> bool:
@@ -13,8 +12,6 @@ def _package_available(package_name: str) -> bool:
     """
     return find_spec(package_name) is not None
 
-
-_TPU_AVAILABLE = TPUAccelerator.is_available()
 
 _IS_WINDOWS = platform.system() == "Windows"
 

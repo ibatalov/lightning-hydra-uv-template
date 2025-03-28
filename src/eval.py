@@ -1,8 +1,8 @@
 from typing import Any, Dict, List, Tuple
 
 import hydra
-from lightning import LightningDataModule, LightningModule, Trainer
-from lightning.pytorch.loggers import Logger
+from pytorch_lightning import LightningDataModule, LightningModule, Trainer
+from pytorch_lightning.loggers import Logger
 from omegaconf import DictConfig
 from src.utils import (
     RankedLogger,

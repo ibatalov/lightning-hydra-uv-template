@@ -20,7 +20,6 @@ from tests.helpers.package_available import (
     _MLFLOW_AVAILABLE,
     _NEPTUNE_AVAILABLE,
     _SH_AVAILABLE,
-    _TPU_AVAILABLE,
     _WANDB_AVAILABLE,
 )
 
@@ -32,7 +31,6 @@ def RunIf(
     min_python: Optional[str] = None,
     skip_windows: bool = False,
     sh: bool = False,
-    tpu: bool = False,
     fairscale: bool = False,
     deepspeed: bool = False,
     wandb: bool = False,
@@ -83,10 +81,6 @@ def RunIf(
     if skip_windows:
         conditions.append(_IS_WINDOWS)
         reasons.append("does not run on Windows")
-
-    if tpu:
-        conditions.append(not _TPU_AVAILABLE)
-        reasons.append("TPU")
 
     if sh:
         conditions.append(not _SH_AVAILABLE)
