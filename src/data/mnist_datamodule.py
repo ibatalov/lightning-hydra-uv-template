@@ -5,6 +5,7 @@ from pytorch_lightning import LightningDataModule
 from torch.utils.data import ConcatDataset, DataLoader, Dataset, random_split
 from torchvision.datasets import MNIST
 from torchvision.transforms import transforms
+import os
 
 
 class MNISTDataModule(LightningDataModule):
@@ -101,8 +102,23 @@ class MNISTDataModule(LightningDataModule):
 
         Do not use it to assign state (self.x = y).
         """
-        MNIST(self.hparams.data_dir, train=True, download=True)
-        MNIST(self.hparams.data_dir, train=False, download=True)
+
+        # bypass check sum since the files are not available
+        files = os.listdir(self.hparams.data_dir)
+        if all(r[0] in files for r in MNIST.resources):
+            download = False
+            print("All files present. Skipping download!")
+        else:
+            print(
+                f"Not all files present at {self.hparams.data_dir}. Trying to download!"
+            )
+            print(
+                f"Files not present: {[r[0] for r in MNIST.resources if r[0] not in files]}"
+            )
+            download = True
+
+        MNIST(self.hparams.data_dir, train=True, download=download)
+        MNIST(self.hparams.data_dir, train=False, download=download)
 
     def setup(self, stage: Optional[str] = None) -> None:
         """Load data. Set variables: `self.data_train`, `self.data_val`, `self.data_test`.
