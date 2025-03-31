@@ -3,9 +3,8 @@ from typing import Any, Dict, Optional, Tuple
 import torch
 from pytorch_lightning import LightningDataModule
 from torch.utils.data import ConcatDataset, DataLoader, Dataset, random_split
-from torchvision.datasets import MNIST
+from torchvision.datasets import QMNIST
 from torchvision.transforms import transforms
-import os
 
 
 class MNISTDataModule(LightningDataModule):
@@ -60,6 +59,7 @@ class MNISTDataModule(LightningDataModule):
         batch_size: int = 64,
         num_workers: int = 0,
         pin_memory: bool = False,
+        persistent_workers: bool = False,
     ) -> None:
         """Initialize a `MNISTDataModule`.
 
@@ -104,21 +104,21 @@ class MNISTDataModule(LightningDataModule):
         """
 
         # bypass check sum since the files are not available
-        files = os.listdir(self.hparams.data_dir)
-        if all(r[0] in files for r in MNIST.resources):
-            download = False
-            print("All files present. Skipping download!")
-        else:
-            print(
-                f"Not all files present at {self.hparams.data_dir}. Trying to download!"
-            )
-            print(
-                f"Files not present: {[r[0] for r in MNIST.resources if r[0] not in files]}"
-            )
-            download = True
-
-        MNIST(self.hparams.data_dir, train=True, download=download)
-        MNIST(self.hparams.data_dir, train=False, download=download)
+        # files = os.listdir(self.hparams.data_dir)
+        # if all(r[0] in files for r in QMNIST.resources):
+        #     download = False
+        #     print("All files present. Skipping download!")
+        # else:
+        #     print(
+        #         f"Not all files present at {self.hparams.data_dir}. Trying to download!"
+        #     )
+        #     print(
+        #         f"Files not present: {[r[0] for r in MNIST.resources if r[0] not in files]}"
+        #     )
+        #     download = True
+        download = True
+        QMNIST(self.hparams.data_dir, what="train", download=download)
+        QMNIST(self.hparams.data_dir, what="test10k", download=download)
 
     def setup(self, stage: Optional[str] = None) -> None:
         """Load data. Set variables: `self.data_train`, `self.data_val`, `self.data_test`.
@@ -142,11 +142,11 @@ class MNISTDataModule(LightningDataModule):
 
         # load and split datasets only if not loaded already
         if not self.data_train and not self.data_val and not self.data_test:
-            trainset = MNIST(
-                self.hparams.data_dir, train=True, transform=self.transforms
+            trainset = QMNIST(
+                self.hparams.data_dir, what="train", transform=self.transforms
             )
-            testset = MNIST(
-                self.hparams.data_dir, train=False, transform=self.transforms
+            testset = QMNIST(
+                self.hparams.data_dir, what="test10k", transform=self.transforms
             )
             dataset = ConcatDataset(datasets=[trainset, testset])
             self.data_train, self.data_val, self.data_test = random_split(
@@ -165,6 +165,7 @@ class MNISTDataModule(LightningDataModule):
             batch_size=self.batch_size_per_device,
             num_workers=self.hparams.num_workers,
             pin_memory=self.hparams.pin_memory,
+            persistent_workers=self.hparams.persistent_workers,
             shuffle=True,
         )
 
@@ -178,6 +179,7 @@ class MNISTDataModule(LightningDataModule):
             batch_size=self.batch_size_per_device,
             num_workers=self.hparams.num_workers,
             pin_memory=self.hparams.pin_memory,
+            persistent_workers=self.hparams.persistent_workers,
             shuffle=False,
         )
 
@@ -191,6 +193,7 @@ class MNISTDataModule(LightningDataModule):
             batch_size=self.batch_size_per_device,
             num_workers=self.hparams.num_workers,
             pin_memory=self.hparams.pin_memory,
+            persistent_workers=self.hparams.persistent_workers,
             shuffle=False,
         )
 
