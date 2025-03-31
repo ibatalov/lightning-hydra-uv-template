@@ -98,6 +98,7 @@ jobs:
       - name: Install dependencies
         run: |
           powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
+          $env:Path = "C:\Users\runneradmin\.local\bin;$env:Path"
           uv sync --frozen --no-editable
           uv run --only-group dev pre-commit run --all-files --show-diff-on-failure --verbose
 
