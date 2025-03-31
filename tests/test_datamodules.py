@@ -20,8 +20,8 @@ def test_mnist_datamodule(batch_size: int) -> None:
     dm.prepare_data()
 
     assert not dm.data_train and not dm.data_val and not dm.data_test
-    assert Path(data_dir, "MNIST").exists()
-    assert Path(data_dir, "MNIST", "raw").exists()
+    assert Path(data_dir, "QMNIST").exists()
+    assert Path(data_dir, "QMNIST", "raw").exists()
 
     dm.setup()
     assert dm.data_train and dm.data_val and dm.data_test
