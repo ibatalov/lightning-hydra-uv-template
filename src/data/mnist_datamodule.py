@@ -8,6 +8,7 @@ from torchvision.transforms import transforms
 
 from src.data.utils import enforce_certificates
 
+
 class MNISTDataModule(LightningDataModule):
     """`LightningDataModule` for the MNIST dataset.
 
