@@ -19,6 +19,7 @@ dependencies = [
     "hydra-colorlog",
     "hydra-optuna-sweeper",
     "rich",
+    "certifi>=2025.1.31",
 ]
 
 [dependency-groups]
