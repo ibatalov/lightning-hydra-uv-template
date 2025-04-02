@@ -2,7 +2,7 @@
 
 # Lightning-Hydra-Template
 
-[![python](https://img.shields.io/badge/-Python_3.8_%7C_3.9_%7C_3.10-blue?logo=python&logoColor=white)](https://github.com/pre-commit/pre-commit)
+[![python](https://img.shields.io/badge/-Python_3.11_%7C_3.12_%7C_3.13-blue?logo=python&logoColor=white)](https://github.com/pre-commit/pre-commit)
 [![pytorch](https://img.shields.io/badge/PyTorch_2.0+-ee4c2c?logo=pytorch&logoColor=white)](https://pytorch.org/get-started/locally/)
 [![lightning](https://img.shields.io/badge/-Lightning_2.0+-792ee5?logo=pytorchlightning&logoColor=white)](https://pytorchlightning.ai/)
 [![hydra](https://img.shields.io/badge/Config-Hydra_1.3-89b8cd)](https://hydra.cc/)
@@ -16,7 +16,7 @@
 [![contributors](https://img.shields.io/github/contributors/ashleve/lightning-hydra-template.svg)](https://github.com/ashleve/lightning-hydra-template/graphs/contributors)
 
 A clean template to kickstart your deep learning project 🚀⚡🔥<br>
-Click on [<kbd>Use this template</kbd>](https://github.com/ashleve/lightning-hydra-template/generate) to initialize new repository.
+Click on [<kbd>Use this template</kbd>](https://github.com/ibatalov/lightning-hydra-uv-template/generate) to initialize new repository.
 
 _Suggestions are always welcome!_
 
@@ -139,24 +139,23 @@ The directory structure of new project looks like this:
 
 ## 🚀  Quickstart
 
+In order to use this project, you need to first [install uv](https://docs.astral.sh/uv/#highlights)
+
 ```bash
 # clone project
 git clone https://github.com/ashleve/lightning-hydra-template
 cd lightning-hydra-template
 
-# [OPTIONAL] create conda environment
-conda create -n myenv python=3.9
-conda activate myenv
+# create uv environment
+uv sync
 
-# install pytorch according to instructions
-# https://pytorch.org/get-started/
+# install pre-commit hooks
+uv run pre-commit install
 
-# install requirements
-pip install -r requirements.txt
 ```
 
 Template contains example with MNIST classification.<br>
-When running `python src/train.py` you should see something like this:
+When running `uv run src/train.py` you should see something like this:
 
 <div align="center">
 
@@ -170,13 +169,13 @@ When running `python src/train.py` you should see something like this:
 <summary><b>Override any config parameter from command line</b></summary>
 
 ```bash
-python train.py trainer.max_epochs=20 model.optimizer.lr=1e-4
+uv run src/train.py trainer.max_epochs=20 model.optimizer.lr=1e-4
 ```
 
 > **Note**: You can also add new parameters with `+` sign.
 
 ```bash
-python train.py +model.new_param="owo"
+uv run src/train.py +model.new_param="owo"
 ```
 
 </details>
@@ -186,28 +185,26 @@ python train.py +model.new_param="owo"
 
 ```bash
 # train on CPU
-python train.py trainer=cpu
+uv run src/train.py trainer=cpu
 
 # train on 1 GPU
-python train.py trainer=gpu
+uv run src/train.py trainer=gpu
 
 # train on TPU
-python train.py +trainer.tpu_cores=8
+uv run src/train.py +trainer.tpu_cores=8
 
 # train with DDP (Distributed Data Parallel) (4 GPUs)
-python train.py trainer=ddp trainer.devices=4
+uv run src/train.py trainer=ddp trainer.devices=4
 
 # train with DDP (Distributed Data Parallel) (8 GPUs, 2 nodes)
-python train.py trainer=ddp trainer.devices=4 trainer.num_nodes=2
+uv run src/train.py trainer=ddp trainer.devices=4 trainer.num_nodes=2
 
 # simulate DDP on CPU processes
-python train.py trainer=ddp_sim trainer.devices=2
+uv run src/train.py trainer=ddp_sim trainer.devices=2
 
 # accelerate training on mac
-python train.py trainer=mps
+uv run src/train.py trainer=mps
 ```
-
-> **Warning**: Currently there are problems with DDP mode, read [this issue](https://github.com/ashleve/lightning-hydra-template/issues/393) to learn more.
 
 </details>
 
@@ -216,7 +213,7 @@ python train.py trainer=mps
 
 ```bash
 # train with pytorch native automatic mixed precision (AMP)
-python train.py trainer=gpu +trainer.precision=16
+uv run src/train.py trainer=gpu +trainer.precision=16
 ```
 
 </details>
@@ -244,7 +241,7 @@ wandb:
 
 ```bash
 # train model with Weights&Biases (link to wandb dashboard should appear in the terminal)
-python train.py logger=wandb
+uv run src/train.py logger=wandb
 ```
 
 > **Note**: Lightning provides convenient integrations with most popular logging frameworks. Learn more [here](#experiment-tracking).
@@ -259,7 +256,7 @@ python train.py logger=wandb
 <summary><b>Train model with chosen experiment config</b></summary>
 
 ```bash
-python train.py experiment=example
+uv run src/train.py experiment=example
 ```
 
 > **Note**: Experiment configs are placed in [configs/experiment/](configs/experiment/).
@@ -270,7 +267,7 @@ python train.py experiment=example
 <summary><b>Attach some callbacks to run</b></summary>
 
 ```bash
-python train.py callbacks=default
+uv run src/train.py callbacks=default
 ```
 
 > **Note**: Callbacks can be used for things such as as model checkpointing, early stopping and [many more](https://pytorch-lightning.readthedocs.io/en/latest/extensions/callbacks.html#built-in-callbacks).
@@ -284,16 +281,16 @@ python train.py callbacks=default
 
 ```yaml
 # gradient clipping may be enabled to avoid exploding gradients
-python train.py +trainer.gradient_clip_val=0.5
+uv run src/train.py +trainer.gradient_clip_val=0.5
 
 # run validation loop 4 times during a training epoch
-python train.py +trainer.val_check_interval=0.25
+uv run src/train.py +trainer.val_check_interval=0.25
 
 # accumulate gradients
-python train.py +trainer.accumulate_grad_batches=10
+uv run src/train.py +trainer.accumulate_grad_batches=10
 
 # terminate training after 12 hours
-python train.py +trainer.max_time="00:12:00:00"
+uv run src/train.py +trainer.max_time="00:12:00:00"
 ```
 
 > **Note**: PyTorch Lightning provides about [40+ useful trainer flags](https://pytorch-lightning.readthedocs.io/en/latest/common/trainer.html#trainer-flags).
@@ -308,22 +305,22 @@ python train.py +trainer.max_time="00:12:00:00"
 # changes logging directory to `logs/debugs/...`
 # sets level of all command line loggers to 'DEBUG'
 # enforces debug-friendly configuration
-python train.py debug=default
+uv run src/train.py debug=default
 
 # run 1 train, val and test loop, using only 1 batch
-python train.py debug=fdr
+uv run src/train.py debug=fdr
 
 # print execution time profiling
-python train.py debug=profiler
+uv run src/train.py debug=profiler
 
 # try overfitting to 1 batch
-python train.py debug=overfit
+uv run src/train.py debug=overfit
 
 # raise exception if there are any numerical anomalies in tensors, like NaN or +/-inf
-python train.py +trainer.detect_anomaly=true
+uv run src/train.py +trainer.detect_anomaly=true
 
 # use only 20% of the data
-python train.py +trainer.limit_train_batches=0.2 \
+uv run src/train.py +trainer.limit_train_batches=0.2 \
 +trainer.limit_val_batches=0.2 +trainer.limit_test_batches=0.2
 ```
 
@@ -335,7 +332,7 @@ python train.py +trainer.limit_train_batches=0.2 \
 <summary><b>Resume training from checkpoint</b></summary>
 
 ```yaml
-python train.py ckpt_path="/path/to/ckpt/name.ckpt"
+uv run src/train.py ckpt_path="/path/to/ckpt/name.ckpt"
 ```
 
 > **Note**: Checkpoint can be either path or URL.
@@ -348,7 +345,7 @@ python train.py ckpt_path="/path/to/ckpt/name.ckpt"
 <summary><b>Evaluate checkpoint on test dataset</b></summary>
 
 ```yaml
-python eval.py ckpt_path="/path/to/ckpt/name.ckpt"
+uv run src/eval.py ckpt_path="/path/to/ckpt/name.ckpt"
 ```
 
 > **Note**: Checkpoint can be either path or URL.
@@ -361,7 +358,7 @@ python eval.py ckpt_path="/path/to/ckpt/name.ckpt"
 ```bash
 # this will run 6 experiments one after the other,
 # each with different combination of batch_size and learning rate
-python train.py -m data.batch_size=32,64,128 model.lr=0.001,0.0005
+uv run src/train.py -m data.batch_size=32,64,128 model.lr=0.001,0.0005
 ```
 
 > **Note**: Hydra composes configs lazily at job launch time. If you change code or configs after launching a job/sweep, the final composed configs might be impacted.
@@ -374,7 +371,7 @@ python train.py -m data.batch_size=32,64,128 model.lr=0.001,0.0005
 ```bash
 # this will run hyperparameter search defined in `configs/hparams_search/mnist_optuna.yaml`
 # over chosen experiment config
-python train.py -m hparams_search=mnist_optuna experiment=example
+uv run src/train.py -m hparams_search=mnist_optuna experiment=example
 ```
 
 > **Note**: Using [Optuna Sweeper](https://hydra.cc/docs/next/plugins/optuna_sweeper) doesn't require you to add any boilerplate to your code, everything is defined in a [single config file](configs/hparams_search/mnist_optuna.yaml).
@@ -387,7 +384,7 @@ python train.py -m hparams_search=mnist_optuna experiment=example
 <summary><b>Execute all experiments from folder</b></summary>
 
 ```bash
-python train.py -m 'experiment=glob(*)'
+uv run src/train.py -m 'experiment=glob(*)'
 ```
 
 > **Note**: Hydra provides special syntax for controlling behavior of multiruns. Learn more [here](https://hydra.cc/docs/next/tutorials/basic/running_your_app/multi-run). The command above executes all experiments from [configs/experiment/](configs/experiment/).
@@ -398,7 +395,7 @@ python train.py -m 'experiment=glob(*)'
 <summary><b>Execute run for multiple different seeds</b></summary>
 
 ```bash
-python train.py -m seed=1,2,3,4,5 trainer.deterministic=True logger=csv tags=["benchmark"]
+uv run src/train.py -m seed=1,2,3,4,5 trainer.deterministic=True logger=csv tags=["benchmark"]
 ```
 
 > **Note**: `trainer.deterministic=True` makes pytorch more deterministic but impacts the performance.
@@ -430,7 +427,7 @@ python train.py -m seed=1,2,3,4,5 trainer.deterministic=True logger=csv tags=["b
 <summary><b>Apply pre-commit hooks</b></summary>
 
 ```bash
-pre-commit run -a
+uv run pre-commit run -a
 ```
 
 > **Note**: Apply pre-commit hooks to do things like auto-formatting code and configs, performing code analysis or removing output from jupyter notebooks. See [# Best Practices](#best-practices) for more.
@@ -438,7 +435,7 @@ pre-commit run -a
 Update pre-commit hook versions in `.pre-commit-config.yaml` with:
 
 ```bash
-pre-commit autoupdate
+uv run pre-commit autoupdate
 ```
 
 </details>
@@ -448,13 +445,13 @@ pre-commit autoupdate
 
 ```bash
 # run all tests
-pytest
+uv run pytest
 
 # run tests from specific file
-pytest tests/test_train.py
+uv run pytest tests/test_train.py
 
 # run all tests except the ones marked as slow
-pytest -k "not slow"
+uv run pytest -k "not slow"
 ```
 
 </details>
@@ -465,7 +462,7 @@ pytest -k "not slow"
 Each experiment should be tagged in order to easily filter them across files or in logger UI:
 
 ```bash
-python train.py tags=["mnist","experiment_X"]
+uv run src/train.py tags=["mnist","experiment_X"]
 ```
 
 > **Note**: You might need to escape the bracket characters in your shell with `python train.py tags=\["mnist","experiment_X"\]`.
@@ -473,7 +470,7 @@ python train.py tags=["mnist","experiment_X"]
 If no tags are provided, you will be asked to input them from command line:
 
 ```bash
->>> python train.py tags=[]
+>>> uv run src/train.py tags=[]
 [2022-07-11 15:40:09,358][src.utils.utils][INFO] - Enforcing tags! <cfg.extras.enforce_tags=True>
 [2022-07-11 15:40:09,359][src.utils.rich_utils][WARNING] - No tags provided in config. Prompting user to input tags...
 Enter a list of comma separated tags (dev):
@@ -482,30 +479,13 @@ Enter a list of comma separated tags (dev):
 If no tags are provided for multirun, an error will be raised:
 
 ```bash
->>> python train.py -m +x=1,2,3 tags=[]
+>>> uv run src/train.py -m +x=1,2,3 tags=[]
 ValueError: Specify tags before launching a multirun!
 ```
 
 > **Note**: Appending lists from command line is currently not supported in hydra :(
 
 </details>
-
-<br>
-
-## ❤️  Contributions
-
-This project exists thanks to all the people who contribute.
-
-![Contributors](https://readme-contributors.now.sh/ashleve/lightning-hydra-template?extension=jpg&width=400&aspectRatio=1)
-
-Have a question? Found a bug? Missing a specific feature? Feel free to file a new issue, discussion or PR with respective title and description.
-
-Before making an issue, please verify that:
-
-- The problem still exists on the current `main` branch.
-- Your python dependencies are updated to recent versions.
-
-Suggestions for improvements are always welcome!
 
 <br>
 
@@ -536,7 +516,7 @@ This allows you to easily iterate over new models! Every time you create a new o
 Switch between models and datamodules with command line arguments:
 
 ```bash
-python train.py model=mnist
+uv run src/train.py model=mnist
 ```
 
 Example pipeline managing the instantiation logic: [src/train.py](src/train.py).
@@ -670,7 +650,7 @@ logger:
 3. Write your experiment config, containing paths to model and datamodule
 4. Run training with chosen experiment config:
    ```bash
-   python src/train.py experiment=experiment_name.yaml
+   uv run src/train.py experiment=experiment_name.yaml
    ```
 
 **Experiment design**
@@ -680,7 +660,7 @@ _Say you want to execute many runs to plot how accuracy changes in respect to ba
 1. Execute the runs with some config parameter that allows you to identify them easily, like tags:
 
    ```bash
-   python train.py -m logger=csv data.batch_size=16,32,64,128 tags=["batch_size_exp"]
+   uv run src/train.py -m logger=csv data.batch_size=16,32,64,128 tags=["batch_size_exp"]
    ```
 
 2. Write a script or notebook that searches over the `logs/` folder and retrieves csv logs from runs containing given tags in config. Plot the results.
@@ -729,7 +709,7 @@ PyTorch Lightning supports many popular logging frameworks: [Weights&Biases](htt
 These tools help you keep track of hyperparameters and output metrics and allow you to compare and visualize results. To use one of them simply complete its configuration in [configs/logger](configs/logger) and run:
 
 ```bash
-python train.py logger=logger_name
+uv run src/train.py logger=logger_name
 ```
 
 You can use many of them at once (see [configs/logger/many_loggers.yaml](configs/logger/many_loggers.yaml) for example).
@@ -746,13 +726,13 @@ Template comes with generic tests implemented with `pytest`.
 
 ```bash
 # run all tests
-pytest
+uv run pytest
 
 # run tests from specific file
-pytest tests/test_train.py
+uv run pytest tests/test_train.py
 
 # run all tests except the ones marked as slow
-pytest -k "not slow"
+uv run pytest -k "not slow"
 ```
 
 Most of the implemented tests don't check for any specific output - they exist to simply verify that executing some commands doesn't end up in throwing exceptions. You can execute them once in a while to speed up the development.
@@ -845,7 +825,7 @@ Lightning supports multiple ways of doing distributed training. The most common 
 You can run DDP on mnist example with 4 GPUs like this:
 
 ```bash
-python train.py trainer=ddp
+uv run src/train.py trainer=ddp
 ```
 
 > **Note**: When using DDP you have to be careful how you write your models - read the [docs](https://lightning.ai/docs/pytorch/latest/advanced/speed.html).
@@ -856,7 +836,7 @@ python train.py trainer=ddp
 
 The simplest way is to pass datamodule attribute directly to model on initialization:
 
-```python
+```uv run python
 # ./src/train.py
 datamodule = hydra.utils.instantiate(config.data)
 model = hydra.utils.instantiate(config.model, some_param=datamodule.some_param)
@@ -866,7 +846,7 @@ model = hydra.utils.instantiate(config.model, some_param=datamodule.some_param)
 
 Similarly, you can pass a whole datamodule config as an init parameter:
 
-```python
+```uv run python
 # ./src/train.py
 model = hydra.utils.instantiate(config.model, dm_conf=config.data, _recursive_=False)
 ```
@@ -882,305 +862,13 @@ some_param: ${data.some_param}
 
 Another approach is to access datamodule in LightningModule directly through Trainer:
 
-```python
+```uv run python
 # ./src/models/mnist_module.py
 def on_train_start(self):
   self.some_param = self.trainer.datamodule.some_param
 ```
 
 > **Note**: This only works after the training starts since otherwise trainer won't be yet available in LightningModule.
-
-<br>
-
-## Best Practices
-
-<details>
-<summary><b>Use Miniconda</b></summary>
-
-It's usually unnecessary to install full anaconda environment, miniconda should be enough (weights around 80MB).
-
-Big advantage of conda is that it allows for installing packages without requiring certain compilers or libraries to be available in the system (since it installs precompiled binaries), so it often makes it easier to install some dependencies e.g. cudatoolkit for GPU support.
-
-It also allows you to access your environments globally which might be more convenient than creating new local environment for every project.
-
-Example installation:
-
-```bash
-wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
-bash Miniconda3-latest-Linux-x86_64.sh
-```
-
-Update conda:
-
-```bash
-conda update -n base -c defaults conda
-```
-
-Create new conda environment:
-
-```bash
-conda create -n myenv python=3.10
-conda activate myenv
-```
-
-</details>
-
-<details>
-<summary><b>Use automatic code formatting</b></summary>
-
-Use pre-commit hooks to standardize code formatting of your project and save mental energy.<br>
-Simply install pre-commit package with:
-
-```bash
-pip install pre-commit
-```
-
-Next, install hooks from [.pre-commit-config.yaml](.pre-commit-config.yaml):
-
-```bash
-pre-commit install
-```
-
-After that your code will be automatically reformatted on every new commit.
-
-To reformat all files in the project use command:
-
-```bash
-pre-commit run -a
-```
-
-To update hook versions in [.pre-commit-config.yaml](.pre-commit-config.yaml) use:
-
-```bash
-pre-commit autoupdate
-```
-
-</details>
-
-<details>
-<summary><b>Set private environment variables in .env file</b></summary>
-
-System specific variables (e.g. absolute paths to datasets) should not be under version control or it will result in conflict between different users. Your private keys also shouldn't be versioned since you don't want them to be leaked.<br>
-
-Template contains `.env.example` file, which serves as an example. Create a new file called `.env` (this name is excluded from version control in .gitignore).
-You should use it for storing environment variables like this:
-
-```
-MY_VAR=/home/user/my_system_path
-```
-
-All variables from `.env` are loaded in `train.py` automatically.
-
-Hydra allows you to reference any env variable in `.yaml` configs like this:
-
-```yaml
-path_to_data: ${oc.env:MY_VAR}
-```
-
-</details>
-
-<details>
-<summary><b>Name metrics using '/' character</b></summary>
-
-Depending on which logger you're using, it's often useful to define metric name with `/` character:
-
-```python
-self.log("train/loss", loss)
-```
-
-This way loggers will treat your metrics as belonging to different sections, which helps to get them organised in UI.
-
-</details>
-
-<details>
-<summary><b>Use torchmetrics</b></summary>
-
-Use official [torchmetrics](https://github.com/PytorchLightning/metrics) library to ensure proper calculation of metrics. This is especially important for multi-GPU training!
-
-For example, instead of calculating accuracy by yourself, you should use the provided `Accuracy` class like this:
-
-```python
-from torchmetrics.classification.accuracy import Accuracy
-
-
-class LitModel(LightningModule):
-    def __init__(self)
-        self.train_acc = Accuracy()
-        self.val_acc = Accuracy()
-
-    def training_step(self, batch, batch_idx):
-        ...
-        acc = self.train_acc(predictions, targets)
-        self.log("train/acc", acc)
-        ...
-
-    def validation_step(self, batch, batch_idx):
-        ...
-        acc = self.val_acc(predictions, targets)
-        self.log("val/acc", acc)
-        ...
-```
-
-Make sure to use different metric instance for each step to ensure proper value reduction over all GPU processes.
-
-Torchmetrics provides metrics for most use cases, like F1 score or confusion matrix. Read [documentation](https://torchmetrics.readthedocs.io/en/latest/#more-reading) for more.
-
-</details>
-
-<details>
-<summary><b>Follow PyTorch Lightning style guide</b></summary>
-
-The style guide is available [here](https://pytorch-lightning.readthedocs.io/en/latest/starter/style_guide.html).<br>
-
-1. Be explicit in your init. Try to define all the relevant defaults so that the user doesn’t have to guess. Provide type hints. This way your module is reusable across projects!
-
-   ```python
-   class LitModel(LightningModule):
-       def __init__(self, layer_size: int = 256, lr: float = 0.001):
-   ```
-
-2. Preserve the recommended method order.
-
-   ```python
-   class LitModel(LightningModule):
-
-       def __init__():
-           ...
-
-       def forward():
-           ...
-
-       def training_step():
-           ...
-
-       def training_step_end():
-           ...
-
-       def on_train_epoch_end():
-           ...
-
-       def validation_step():
-           ...
-
-       def validation_step_end():
-           ...
-
-       def on_validation_epoch_end():
-           ...
-
-       def test_step():
-           ...
-
-       def test_step_end():
-           ...
-
-       def on_test_epoch_end():
-           ...
-
-       def configure_optimizers():
-           ...
-
-       def any_extra_hook():
-           ...
-   ```
-
-</details>
-
-<details>
-<summary><b>Version control your data and models with DVC</b></summary>
-
-Use [DVC](https://dvc.org) to version control big files, like your data or trained ML models.<br>
-To initialize the dvc repository:
-
-```bash
-dvc init
-```
-
-To start tracking a file or directory, use `dvc add`:
-
-```bash
-dvc add data/MNIST
-```
-
-DVC stores information about the added file (or a directory) in a special .dvc file named data/MNIST.dvc, a small text file with a human-readable format. This file can be easily versioned like source code with Git, as a placeholder for the original data:
-
-```bash
-git add data/MNIST.dvc data/.gitignore
-git commit -m "Add raw data"
-```
-
-</details>
-
-<details>
-<summary><b>Support installing project as a package</b></summary>
-
-It allows other people to easily use your modules in their own projects.
-Change name of the `src` folder to your project name and complete the `setup.py` file.
-
-Now your project can be installed from local files:
-
-```bash
-pip install -e .
-```
-
-Or directly from git repository:
-
-```bash
-pip install git+git://github.com/YourGithubName/your-repo-name.git --upgrade
-```
-
-So any file can be easily imported into any other file like so:
-
-```python
-from project_name.models.mnist_module import MNISTLitModule
-from project_name.data.mnist_datamodule import MNISTDataModule
-```
-
-</details>
-
-<details>
-<summary><b>Keep local configs out of code versioning</b></summary>
-
-Some configurations are user/machine/installation specific (e.g. configuration of local cluster, or harddrive paths on a specific machine). For such scenarios, a file [configs/local/default.yaml](configs/local/) can be created which is automatically loaded but not tracked by Git.
-
-For example, you can use it for a SLURM cluster config:
-
-```yaml
-# @package _global_
-
-defaults:
-  - override /hydra/launcher@_here_: submitit_slurm
-
-data_dir: /mnt/scratch/data/
-
-hydra:
-  launcher:
-    timeout_min: 1440
-    gpus_per_task: 1
-    gres: gpu:1
-  job:
-    env_set:
-      MY_VAR: /home/user/my/system/path
-      MY_KEY: asdgjhawi8y23ihsghsueity23ihwd
-```
-
-</details>
-
-<br>
-
-## Resources
-
-This template was inspired by:
-
-- [PyTorchLightning/deep-learning-project-template](https://github.com/PyTorchLightning/deep-learning-project-template)
-- [drivendata/cookiecutter-data-science](https://github.com/drivendata/cookiecutter-data-science)
-- [lucmos/nn-template](https://github.com/lucmos/nn-template)
-
-Other useful repositories:
-
-- [jxpress/lightning-hydra-template-vertex-ai](https://github.com/jxpress/lightning-hydra-template-vertex-ai) - lightning-hydra-template integration with Vertex AI hyperparameter tuning and custom training job
-
-</details>
 
 <br>
 
@@ -1240,37 +928,8 @@ What it does
 
 ## Installation
 
-#### Pip
-
-```bash
-# clone project
-git clone https://github.com/YourGithubName/your-repo-name
-cd your-repo-name
-
-# [OPTIONAL] create conda environment
-conda create -n myenv python=3.9
-conda activate myenv
-
-# install pytorch according to instructions
-# https://pytorch.org/get-started/
-
-# install requirements
-pip install -r requirements.txt
-```
-
-#### Conda
-
-```bash
-# clone project
-git clone https://github.com/YourGithubName/your-repo-name
-cd your-repo-name
-
-# create conda environment and install dependencies
-conda env create -f environment.yaml -n myenv
-
-# activate conda environment
-conda activate myenv
-```
+uv sync
+un run pre-commit install
 
 ## How to run
 
@@ -1278,20 +937,20 @@ Train model with default configuration
 
 ```bash
 # train on CPU
-python src/train.py trainer=cpu
+uv run src/train.py trainer=cpu
 
 # train on GPU
-python src/train.py trainer=gpu
+uv run src/train.py trainer=gpu
 ```
 
 Train model with chosen experiment configuration from [configs/experiment/](configs/experiment/)
 
 ```bash
-python src/train.py experiment=experiment_name.yaml
+uv run src/train.py experiment=experiment_name.yaml
 ```
 
 You can override any parameter from command line like this
 
 ```bash
-python src/train.py trainer.max_epochs=20 data.batch_size=64
+uv run src/train.py trainer.max_epochs=20 data.batch_size=64
 ```
