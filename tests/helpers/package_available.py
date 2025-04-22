@@ -1,5 +1,4 @@
 import platform
-
 from importlib.util import find_spec
 
 

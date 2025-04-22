@@ -1,6 +1,6 @@
 import warnings
 from importlib.util import find_spec
-from typing import Any, Callable, Dict, Optional, Tuple
+from typing import Any, Callable, Optional
 
 from omegaconf import DictConfig
 
@@ -10,7 +10,7 @@ log = pylogger.RankedLogger(__name__, rank_zero_only=True)
 
 
 def extras(cfg: DictConfig) -> None:
-    """Applies optional utilities before the task is started.
+    """Apply optional utilities before the task is started.
 
     Utilities:
         - Ignoring python warnings
@@ -41,7 +41,9 @@ def extras(cfg: DictConfig) -> None:
 
 
 def task_wrapper(task_func: Callable) -> Callable:
-    """Optional decorator that controls the failure behavior when executing the task function.
+    """Wrap a task.
+
+    Optional decorator that controls the failure behavior when executing the task function.
 
     This wrapper can be used to:
         - make sure loggers are closed even if the task function raises an exception (prevents multirun failure)
@@ -52,7 +54,7 @@ def task_wrapper(task_func: Callable) -> Callable:
     Example:
     ```
     @utils.task_wrapper
-    def train(cfg: DictConfig) -> Tuple[Dict[str, Any], Dict[str, Any]]:
+    def train(cfg: DictConfig) -> tuple[dict[str, Any], dict[str, Any]]:
         ...
         return metric_dict, object_dict
     ```
@@ -60,9 +62,10 @@ def task_wrapper(task_func: Callable) -> Callable:
     :param task_func: The task function to be wrapped.
 
     :return: The wrapped task function.
+
     """
 
-    def wrap(cfg: DictConfig) -> Tuple[Dict[str, Any], Dict[str, Any]]:
+    def wrap(cfg: DictConfig) -> tuple[dict[str, Any], dict[str, Any]]:
         # execute the task
         try:
             metric_dict, object_dict = task_func(cfg=cfg)
@@ -96,7 +99,7 @@ def task_wrapper(task_func: Callable) -> Callable:
 
 
 def get_metric_value(
-    metric_dict: Dict[str, Any], metric_name: Optional[str]
+    metric_dict: dict[str, Any], metric_name: Optional[str]
 ) -> Optional[float]:
     """Safely retrieves value of the metric logged in LightningModule.
 

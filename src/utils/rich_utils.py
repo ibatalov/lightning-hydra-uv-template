@@ -1,12 +1,12 @@
+from collections.abc import Sequence
 from pathlib import Path
-from typing import Sequence
 
 import rich
 import rich.syntax
 import rich.tree
 from hydra.core.hydra_config import HydraConfig
-from pytorch_lightning.utilities import rank_zero_only
 from omegaconf import DictConfig, OmegaConf, open_dict
+from pytorch_lightning.utilities import rank_zero_only
 from rich.prompt import Prompt
 
 from src.utils import pylogger
@@ -29,7 +29,7 @@ def print_config_tree(
     resolve: bool = False,
     save_to_file: bool = False,
 ) -> None:
-    """Prints the contents of a DictConfig as a tree structure using the Rich library.
+    """Print the contents of a DictConfig as a tree structure using the Rich library.
 
     :param cfg: A DictConfig composed by Hydra.
     :param print_order: Determines in what order config components are printed. Default is ``("data", "model",
@@ -70,7 +70,9 @@ def print_config_tree(
 
     # save config tree to file
     if save_to_file:
-        with open(Path(cfg.paths.output_dir, "config_tree.log"), "w") as file:
+        with open(
+            Path(cfg.paths.output_dir, "config_tree.log"), "w", encoding="utf-8"
+        ) as file:
             rich.print(tree, file=file)
 
 
@@ -87,7 +89,7 @@ def enforce_tags(cfg: DictConfig, save_to_file: bool = False) -> None:
 
         log.warning("No tags provided in config. Prompting user to input tags...")
         tags = Prompt.ask("Enter a list of comma separated tags", default="dev")
-        tags = [t.strip() for t in tags.split(",") if t != ""]
+        tags = [t.strip() for t in tags.split(",") if len(t) > 0]
 
         with open_dict(cfg):
             cfg.tags = tags
@@ -95,5 +97,7 @@ def enforce_tags(cfg: DictConfig, save_to_file: bool = False) -> None:
         log.info(f"Tags: {cfg.tags}")
 
     if save_to_file:
-        with open(Path(cfg.paths.output_dir, "tags.log"), "w") as file:
+        with open(
+            Path(cfg.paths.output_dir, "tags.log"), "w", encoding="utf-8"
+        ) as file:
             rich.print(cfg.tags, file=file)

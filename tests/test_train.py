@@ -6,7 +6,7 @@ from hydra.core.hydra_config import HydraConfig
 from omegaconf import DictConfig, open_dict
 
 from src.train import train
-from tests.helpers.run_if import RunIf
+from tests.helpers.run_if import run_if
 
 
 def test_train_fast_dev_run(cfg_train: DictConfig) -> None:
@@ -21,7 +21,7 @@ def test_train_fast_dev_run(cfg_train: DictConfig) -> None:
     train(cfg_train)
 
 
-@RunIf(min_gpus=1)
+@run_if(min_gpus=1)
 def test_train_fast_dev_run_gpu(cfg_train: DictConfig) -> None:
     """Run for 1 train, val and test step on GPU.
 
@@ -34,7 +34,7 @@ def test_train_fast_dev_run_gpu(cfg_train: DictConfig) -> None:
     train(cfg_train)
 
 
-@RunIf(min_gpus=1)
+@run_if(min_gpus=1)
 @pytest.mark.slow
 def test_train_epoch_gpu_amp(cfg_train: DictConfig) -> None:
     """Train 1 epoch on GPU with mixed-precision.

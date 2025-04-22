@@ -1,17 +1,19 @@
-"""This file prepares config fixtures for other tests."""
+"""Prepares config fixtures for other tests."""
 
+from collections.abc import Iterator
 from pathlib import Path
 
 import pytest
 from hydra import compose, initialize
 from hydra.core.global_hydra import GlobalHydra
 from omegaconf import DictConfig, open_dict
-from typing import Iterator
 
 
 @pytest.fixture(scope="package")
 def cfg_train_global() -> DictConfig:
-    """A pytest fixture for setting up a default Hydra DictConfig for training.
+    """Make train cfg.
+
+    A pytest fixture for setting up a default Hydra DictConfig for training.
 
     :return: A DictConfig object containing a default Hydra configuration for training.
     """
@@ -39,7 +41,9 @@ def cfg_train_global() -> DictConfig:
 
 @pytest.fixture(scope="package")
 def cfg_eval_global() -> DictConfig:
-    """A pytest fixture for setting up a default Hydra DictConfig for evaluation.
+    """Make eval cfg.
+
+    A pytest fixture for setting up a default Hydra DictConfig for evaluation.
 
     :return: A DictConfig containing a default Hydra configuration for evaluation.
     """
@@ -67,7 +71,9 @@ def cfg_eval_global() -> DictConfig:
 
 @pytest.fixture(scope="function")
 def cfg_train(cfg_train_global: DictConfig, tmp_path: Path) -> Iterator[DictConfig]:
-    """A pytest fixture built on top of the `cfg_train_global()` fixture, which accepts a temporary
+    """Make train cfg.
+
+    A pytest fixture built on top of the `cfg_train_global()` fixture, which accepts a temporary
     logging path `tmp_path` for generating a temporary logging path.
 
     This is called by each test which uses the `cfg_train` arg. Each test generates its own temporary logging path.
@@ -90,7 +96,9 @@ def cfg_train(cfg_train_global: DictConfig, tmp_path: Path) -> Iterator[DictConf
 
 @pytest.fixture(scope="function")
 def cfg_eval(cfg_eval_global: DictConfig, tmp_path: Path) -> Iterator[DictConfig]:
-    """A pytest fixture built on top of the `cfg_eval_global()` fixture, which accepts a temporary
+    """Make eval cfg.
+
+    A pytest fixture built on top of the `cfg_eval_global()` fixture, which accepts a temporary
     logging path `tmp_path` for generating a temporary logging path.
 
     This is called by each test which uses the `cfg_eval` arg. Each test generates its own temporary logging path.
