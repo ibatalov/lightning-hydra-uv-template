@@ -6,8 +6,7 @@
 
 name: Code Quality PR
 
-on:
-  pull_request:
+on: pull_request
 
 jobs:
   code-quality:
