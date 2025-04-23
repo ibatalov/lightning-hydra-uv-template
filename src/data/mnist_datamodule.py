@@ -1,4 +1,4 @@
-from typing import Any, Dict, Optional, Tuple
+from typing import Any, Optional
 
 import torch
 from pytorch_lightning import LightningDataModule
@@ -6,7 +6,7 @@ from torch.utils.data import ConcatDataset, DataLoader, Dataset, random_split
 from torchvision.datasets import QMNIST
 from torchvision.transforms import transforms
 
-from src.data.utils import enforce_certificates
+from src.data.utils import EnforceCertificates
 
 
 class MNISTDataModule(LightningDataModule):
@@ -57,7 +57,7 @@ class MNISTDataModule(LightningDataModule):
     def __init__(
         self,
         data_dir: str = "data/",
-        train_val_test_split: Tuple[int, int, int] = (55_000, 5_000, 10_000),
+        train_val_test_split: tuple[int, int, int] = (55_000, 5_000, 10_000),
         batch_size: int = 64,
         num_workers: int = 0,
         pin_memory: bool = False,
@@ -97,15 +97,16 @@ class MNISTDataModule(LightningDataModule):
         return 10
 
     def prepare_data(self) -> None:
-        """Download data if needed. Lightning ensures that `self.prepare_data()` is called only
+        """Download data if needed.
+
+        Lightning ensures that `self.prepare_data()` is called only
         within a single process on CPU, so you can safely add your downloading logic within. In
         case of multi-node training, the execution of this hook depends upon
         `self.prepare_data_per_node()`.
 
         Do not use it to assign state (self.x = y).
         """
-
-        with enforce_certificates():
+        with EnforceCertificates():
             QMNIST(self.hparams.data_dir, what="train", download=True)
             QMNIST(self.hparams.data_dir, what="test10k", download=True)
 
@@ -187,24 +188,24 @@ class MNISTDataModule(LightningDataModule):
         )
 
     def teardown(self, stage: Optional[str] = None) -> None:
-        """Lightning hook for cleaning up after `trainer.fit()`, `trainer.validate()`,
-        `trainer.test()`, and `trainer.predict()`.
+        """Lightning hook for cleaning up.
+
+        Cleanup after `trainer.fit()`, `trainer.validate()`, `trainer.test()`, and `trainer.predict()`.
 
         :param stage: The stage being torn down. Either `"fit"`, `"validate"`, `"test"`, or `"predict"`.
             Defaults to ``None``.
         """
         pass
 
-    def state_dict(self) -> Dict[Any, Any]:
+    def state_dict(self) -> dict[Any, Any]:
         """Called when saving a checkpoint. Implement to generate and save the datamodule state.
 
         :return: A dictionary containing the datamodule state that you want to save.
         """
         return {}
 
-    def load_state_dict(self, state_dict: Dict[str, Any]) -> None:
-        """Called when loading a checkpoint. Implement to reload datamodule state given datamodule
-        `state_dict()`.
+    def load_state_dict(self, state_dict: dict[str, Any]) -> None:
+        """Called when loading a checkpoint. Implement to reload datamodule state given datamodule `state_dict()`.
 
         :param state_dict: The datamodule state returned by `self.state_dict()`.
         """

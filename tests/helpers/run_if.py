@@ -1,15 +1,15 @@
-"""Adapted from:
+"""Adapted from.
 
-https://github.com/PyTorchLightning/pytorch-lightning/blob/master/tests/helpers/runif.py
+https://github.com/PyTorchLightning/pytorch-lightning/blob/master/tests/helpers/run_if.py
 """
 
 import sys
-from typing import Any, Dict, Optional
+from importlib.metadata import version
+from typing import Any, Optional
 
 import pytest
 import torch
 from packaging.version import Version
-from importlib.metadata import version
 from pytest import MarkDecorator
 
 from tests.helpers.package_available import (
@@ -24,7 +24,7 @@ from tests.helpers.package_available import (
 )
 
 
-def RunIf(
+def run_if(  # noqa: C901
     min_gpus: int = 0,
     min_torch: Optional[str] = None,
     max_torch: Optional[str] = None,
@@ -37,9 +37,9 @@ def RunIf(
     neptune: bool = False,
     comet: bool = False,
     mlflow: bool = False,
-    **kwargs: Dict[Any, Any],
+    **kwargs: dict[Any, Any],
 ) -> MarkDecorator:
-    """Creates a new `@RunIf` `MarkDecorator` decorator.
+    """Create a new `@run_if` `MarkDecorator` decorator.
 
     :param min_gpus: Min number of GPUs required to run test.
     :param min_torch: Minimum pytorch version to run test.

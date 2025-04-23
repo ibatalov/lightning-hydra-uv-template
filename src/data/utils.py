@@ -1,24 +1,24 @@
-from contextlib import AbstractContextManager
-import certifi
 import ssl
 import urllib.request
+from contextlib import AbstractContextManager
 from functools import partial
+from typing import Any
+
+import certifi
 
 
-class enforce_certificates(AbstractContextManager):
+class EnforceCertificates(AbstractContextManager):
     """Context manager to enforce SSL certificates."""
 
     def __enter__(self) -> None:
         """Enter the context."""
-        self.urlopen = urllib.request.urlopen
+        self.urlopen = urllib.request.urlopen  # noqa: S310
         urllib.request.urlopen = partial(
-            urllib.request.urlopen,
+            urllib.request.urlopen,  # noqa: S310
             context=ssl.create_default_context(cafile=certifi.where()),
         )
 
-    def __exit__(self, exc_type, exc_val, exc_tb) -> bool:
-        """Exit the context. Restore default functionality/"""
+    def __exit__(self, exc_type: Any, exc_val: Any, exc_tb: Any) -> bool:  # noqa: ANN401
+        """Exit the context. Restore default functionality."""
         urllib.request.urlopen = self.urlopen
-        if exc_type is not None:
-            return False
-        return True
+        return exc_type is None
