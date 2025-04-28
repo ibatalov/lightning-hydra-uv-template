@@ -1,10 +1,6 @@
 FROM ghcr.io/astral-sh/uv:bookworm AS base
 ENV UV_PROJECT_ENVIRONMENT=/venv
 ENV VIRTUAL_ENV=${UV_PROJECT_ENVIRONMENT}
-#ENV http_proxy=http://rb-proxy-na.bosch.com:8080
-#ENV https_proxy=http://rb-proxy-na.bosch.com:8080
-#ENV HTTP_PROXY=http://rb-proxy-na.bosch.com:8080
-#ENV HTTPS_PROXY=http://rb-proxy-na.bosch.com:8080
 WORKDIR /app
 
 RUN --mount=type=cache,target=/var/cache/apt \
