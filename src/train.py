@@ -1,4 +1,4 @@
-from typing import Any, Optional
+from typing import Any
 
 import hydra
 from omegaconf import DictConfig
@@ -92,7 +92,7 @@ def train(cfg: DictConfig) -> tuple[dict[str, Any], dict[str, Any]]:
 
 
 @hydra.main(version_base="1.3", config_path="../configs", config_name="train.yaml")
-def main(cfg: DictConfig) -> Optional[float]:
+def main(cfg: DictConfig) -> float | None:
     """Run main entry point for training.
 
     :param cfg: DictConfig configuration composed by Hydra.

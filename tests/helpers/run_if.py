@@ -5,7 +5,7 @@ https://github.com/PyTorchLightning/pytorch-lightning/blob/master/tests/helpers/
 
 import sys
 from importlib.metadata import version
-from typing import Any, Optional
+from typing import Any
 
 import pytest
 import torch
@@ -26,9 +26,9 @@ from tests.helpers.package_available import (
 
 def run_if(  # noqa: C901
     min_gpus: int = 0,
-    min_torch: Optional[str] = None,
-    max_torch: Optional[str] = None,
-    min_python: Optional[str] = None,
+    min_torch: str | None = None,
+    max_torch: str | None = None,
+    min_python: str | None = None,
     skip_windows: bool = False,
     sh: bool = False,
     fairscale: bool = False,
@@ -110,7 +110,7 @@ def run_if(  # noqa: C901
         conditions.append(not _MLFLOW_AVAILABLE)
         reasons.append("mlflow")
 
-    reasons = [rs for cond, rs in zip(conditions, reasons) if cond]
+    reasons = [rs for cond, rs in zip(conditions, reasons, strict=False) if cond]
     return pytest.mark.skipif(
         condition=any(conditions),
         reason=f"Requires: [{' + '.join(reasons)}]",

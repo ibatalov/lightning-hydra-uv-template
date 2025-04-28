@@ -1,6 +1,6 @@
 import logging
 from collections.abc import Mapping
-from typing import Any, Optional
+from typing import Any
 
 from lightning_utilities.core.rank_zero import rank_prefixed_message
 from pytorch_lightning.utilities import rank_zero_only
@@ -13,7 +13,7 @@ class RankedLogger(logging.LoggerAdapter):
         self,
         name: str = __name__,
         rank_zero_only: bool = False,
-        extra: Optional[Mapping[str, object]] = None,
+        extra: Mapping[str, object] | None = None,
     ) -> None:
         """Initialize a multi-GPU-friendly python command line logger that logs on all processes with their rank prefixed in the log message.
 
