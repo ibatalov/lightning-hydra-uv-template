@@ -7,7 +7,7 @@ name = "lightning-hydra-template"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
-requires-python = ">=3.9"
+requires-python = ">=3.11"
 dependencies = [
     "importlib-metadata>=8.6.1",
     "sh>=2.2.2",
@@ -32,6 +32,11 @@ dev = [
     "pytest>=8.3.5",
     "pytest-cov>=6.0.0",
 ]
+
+[project.scripts]
+template_train = "src.train:main"
+template_eval = "src.eval:main"
+
 
 [tool.hatch.build.targets.wheel]
 packages = ["src"]
