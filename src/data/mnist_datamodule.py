@@ -1,4 +1,4 @@
-from typing import Any, Optional
+from typing import Any
 
 import torch
 from pytorch_lightning import LightningDataModule
@@ -82,9 +82,9 @@ class MNISTDataModule(LightningDataModule):
             [transforms.ToTensor(), transforms.Normalize((0.1307,), (0.3081,))]
         )
 
-        self.data_train: Optional[Dataset] = None
-        self.data_val: Optional[Dataset] = None
-        self.data_test: Optional[Dataset] = None
+        self.data_train: Dataset | None = None
+        self.data_val: Dataset | None = None
+        self.data_test: Dataset | None = None
 
         self.batch_size_per_device = batch_size
 
@@ -110,7 +110,7 @@ class MNISTDataModule(LightningDataModule):
             QMNIST(self.hparams.data_dir, what="train", download=True)
             QMNIST(self.hparams.data_dir, what="test10k", download=True)
 
-    def setup(self, stage: Optional[str] = None) -> None:
+    def setup(self, stage: str | None = None) -> None:
         """Load data. Set variables: `self.data_train`, `self.data_val`, `self.data_test`.
 
         This method is called by Lightning before `trainer.fit()`, `trainer.validate()`, `trainer.test()`, and
@@ -187,7 +187,7 @@ class MNISTDataModule(LightningDataModule):
             shuffle=False,
         )
 
-    def teardown(self, stage: Optional[str] = None) -> None:
+    def teardown(self, stage: str | None = None) -> None:
         """Lightning hook for cleaning up.
 
         Cleanup after `trainer.fit()`, `trainer.validate()`, `trainer.test()`, and `trainer.predict()`.

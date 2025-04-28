@@ -110,6 +110,8 @@ ignore = [
   "PLC0415",# Import should be at the top of the file
   "PLC1901",#  ... as an empty string is falsey
   "D401",   # First line of docstring should be in imperative mood
+  "D203",   # incorrect-blank-line-before-class
+  "D213",       # multi-line-summary-second-line
 ]
 preview = true
 
